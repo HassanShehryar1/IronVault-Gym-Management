@@ -1,0 +1,163 @@
+# Feature: Member Management
+
+## Description
+This feature handles all member-related operations including registration, check-in, membership renewal, viewing member details, and membership termination.
+
+## Functionality
+
+### 1. New Member Registration
+- Register new gym members
+- Assign membership plans
+- Collect member information (name, email, phone)
+- Calculate membership expiry dates
+- Process initial payment
+
+### 2. Member Check-in
+- Track daily member attendance
+- Verify active membership status
+- Log check-in timestamp
+
+### 3. Membership Renewal
+- Extend membership period
+- Process renewal payments
+- Update expiry dates
+- Prevent renewals for inactive members
+
+### 4. View Member Details
+- Display complete member information
+- Show membership plan details
+- View membership status (Active/Expired)
+- Check expiry dates
+
+### 5. Terminate Membership
+- Deactivate member accounts
+- Mark membership as inactive
+- Prevent future check-ins
+
+## Code Locations
+
+### Presentation Layer (`Presentation.cs`)
+
+**Receptionist Dashboard Menu**
+- Lines: **190-204**
+- Shows all member management options
+
+**Register New Member**
+- Lines: **211-265**
+- Handles new member registration workflow
+- Collects member info and assigns plans
+- Processes initial payment
+
+**Check-in Member**
+- Lines: **267-292**
+- Validates member ID
+- Checks membership status
+- Records check-in
+
+**Renew Membership**
+- Lines: **294-340**
+- Displays member info
+- Allows plan selection
+- Processes renewal payment
+- Updates expiry date
+
+**View Member Details**
+- Lines: **376-407**
+- Displays comprehensive member information
+- Shows plan details and expiry status
+
+**Terminate Member Membership**
+- Lines: **409-440**
+- Lists active members
+- Confirms termination
+- Deactivates membership
+
+### Business Logic Layer (`Business_Logic.cs`)
+
+**Member Registration**
+- Method: `RegisterMember()`
+- Validates member data
+- Creates new member record
+- Assigns membership plan
+- Calculates expiry date
+
+**Member Check-in**
+- Method: `CheckInMember()`
+- Verifies member exists
+- Checks active status
+- Records attendance
+
+**Membership Renewal**
+- Method: `RenewMembership()`
+- Validates member ID
+- Updates expiry date
+- Records payment
+- Triggers expiry notifications if needed
+
+**Get Member Details**
+- Method: `GetMemberById()`
+- Retrieves member information
+- Returns complete member object
+
+**Terminate Membership**
+- Method: `TerminateMembership()`
+- Sets member as inactive
+- Prevents future operations
+
+### Data Access Layer (`Data_Access.cs`)
+
+**Member Model**
+- Class: `Member`
+- Properties:
+  - MemberID (int)
+  - Name (string)
+  - Email (string)
+  - Phone (string)
+  - PlanID (int)
+  - JoinDate (DateTime)
+  - ExpiryDate (DateTime)
+  - IsActive (bool)
+
+**Repository Methods**
+- `AddMember()` - Add new member to database
+- `GetMemberById()` - Retrieve member by ID
+- `GetAllMembers()` - Get all members list
+- `GetActiveMembers()` - Filter active members only
+- `UpdateMember()` - Update member information
+- `DeleteMember()` - Remove member (soft delete)
+
+## User Flow
+
+```
+Receptionist Login
+    ↓
+Select "New Member Registration"
+    ↓
+Enter Member Details (Name, Email, Phone)
+    ↓
+Select Membership Plan
+    ↓
+Process Payment
+    ↓
+Member Registered Successfully
+    ↓
+Member Can Check-in
+```
+
+## Key Features
+- ✅ Complete member lifecycle management
+- ✅ Automated expiry date calculation
+- ✅ Active/Inactive status tracking
+- ✅ Payment integration
+- ✅ Membership plan flexibility
+- ✅ Check-in validation
+
+## Dependencies
+- Requires: Membership Plans (from Data Layer)
+- Requires: Payment Processing (for registration/renewal)
+- Triggers: Membership Expiry Notifications (Event-based)
+
+## Access Control
+- **Receptionist**: Full access to all member operations
+- **Owner**: View-only access to member details
+- **Trainer**: View assigned members only
