@@ -1,0 +1,229 @@
+# Feature: Trainer Management
+
+## Description
+This feature manages the relationship between trainers and gym members. It allows trainers to be assigned to members and provides trainers with tools to view and manage their assigned clients.
+
+## Functionality
+
+### 1. Assign Member to Trainer
+- Link members to specific trainers
+- Create trainer-member relationships
+- Track member assignments
+
+### 2. View Assigned Members
+- Display trainer's client list
+- Show member details for assigned clients
+- Track member progress
+
+### 3. Trainer Dashboard
+- Dedicated interface for trainers
+- Quick access to assigned members
+- Member information viewing
+
+## Code Locations
+
+### Presentation Layer (`Presentation.cs`)
+
+**Trainer Login Flow**
+- Lines: **170-187**
+- Handles trainer authentication
+- Validates trainer credentials
+- Redirects to trainer dashboard
+
+**Trainer Dashboard**
+- Lines: **740-780** (approximate)
+- Main menu for trainers
+- Options:
+  1. View Assigned Members
+  2. View Member Details
+  3. Logout
+
+**View Assigned Members**
+- Method: `ViewAssignedMembers()` (in Trainer Dashboard)
+- Displays list of members assigned to logged-in trainer
+- Shows member ID, name, and membership status
+- Formatted table view
+
+**Assign Member to Trainer** (Owner Function)
+- Accessible from Owner Dashboard
+- Lists all trainers and members
+- Creates assignment link
+- Confirms assignment
+
+### Business Logic Layer (`Business_Logic.cs`)
+
+**Assign Member to Trainer**
+- Method: `AssignMemberToTrainer()`
+- Validates trainer and member exist
+- Creates assignment record
+- Links member to trainer
+
+**Get Assigned Members**
+- Method: `GetMembersAssignedToTrainer()`
+- Filters members by trainer ID
+- Returns list of assigned members
+- Includes member details
+
+**Get Trainer by ID**
+- Method: `GetTrainerById()`
+- Retrieves trainer information
+- Returns trainer object
+
+**Login Trainer**
+- Method: `LoginTrainer()`
+- Validates trainer credentials
+- Returns authentication status
+- Sets current trainer session
+
+### Data Access Layer (`Data_Access.cs`)
+
+**Trainer Model** (Extends Staff)
+- Inherits from: `Staff` class
+- Additional Properties (conceptual):
+  - AssignedMembers (List<int>)
+  - Specialization (string)
+
+**Member-Trainer Assignment**
+- Stored in Member model
+- Property: `AssignedTrainerID` (int, nullable)
+
+**Repository Methods**
+- `AssignMemberToTrainer()` - Create assignment
+- `GetMembersByTrainer()` - Get trainer's members
+- `GetTrainerById()` - Retrieve trainer details
+- `RemoveAssignment()` - Unlink member from trainer
+- `GetAllTrainers()` - List all active trainers
+
+## User Flow
+
+### Trainer Workflow
+```
+Trainer Login
+    ↓
+Enter Credentials
+    ↓
+Trainer Dashboard
+    ↓
+Select "View Assigned Members"
+    ↓
+See List of Clients
+    ↓
+Select Member to View Details
+    ↓
+View Member Information
+```
+
+### Owner Assignment Workflow
+```
+Owner Login
+    ↓
+Select "Assign Member to Trainer"
+    ↓
+View All Trainers
+    ↓
+Select Trainer
+    ↓
+View Unassigned/All Members
+    ↓
+Select Member
+    ↓
+Confirm Assignment
+    ↓
+Assignment Created
+```
+
+## Key Features
+- ✅ Trainer-member relationship management
+- ✅ Dedicated trainer dashboard
+- ✅ View assigned client list
+- ✅ Member information access for trainers
+- ✅ Assignment tracking
+- ✅ Trainer workload visibility
+
+## Display Examples
+
+### Assigned Members List
+```
+=== YOUR ASSIGNED MEMBERS ===
+
+ID    | Name              | Plan        | Status
+------|-------------------|-------------|--------
+101   | Alice Johnson     | Monthly     | Active
+103   | Bob Williams      | Annual      | Active
+105   | Carol Davis       | Quarterly   | Active
+
+Total Assigned: 3 members
+```
+
+### Trainer Dashboard Menu
+```
+       TRAINER DASHBOARD
+
+1. View Assigned Members
+2. View Member Details
+3. Logout
+
+Choice: _
+```
+
+## Dependencies
+- Requires: Member Management (member data)
+- Requires: Staff Management (trainer accounts)
+- Requires: Authentication System (trainer login)
+- Connected to: Member check-in system
+
+## Access Control
+- **Owner**: Can assign members to trainers
+- **Receptionist**: No access to trainer assignments
+- **Trainer**: View assigned members only (cannot modify)
+
+## Business Rules
+- Only active trainers can have member assignments
+- Members can be assigned to one trainer at a time
+- Trainers can view only their assigned members
+- Assignments persist even if member becomes inactive
+- Terminated trainers lose access to members
+
+## Trainer Capabilities
+
+### What Trainers CAN Do:
+- View their assigned members
+- See member contact information
+- Check member membership status
+- View member join dates
+
+### What Trainers CANNOT Do:
+- Register new members
+- Modify member information
+- Process payments
+- Access other trainers' members
+- Manage staff or equipment
+
+## Integration Points
+
+### With Member Management
+- Members assigned to trainers
+- Trainer ID stored in member record
+- Assignment displayed in member details
+
+### With Staff Management
+- Trainers are staff with role "Trainer"
+- Trainer salary management
+- Active/Inactive status affects assignments
+
+### With Authentication
+- Trainer-specific login flow
+- Role-based access control
+- Session management for trainers
+
+## Future Enhancements
+- Workout plan creation
+- Progress tracking for members
+- Trainer schedule management
+- Member feedback system
+- Training session logging
+- Performance analytics
+- Trainer ratings
+- Specialization filtering
+- Maximum client limits per trainer
+- Automated assignment balancing
