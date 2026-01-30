@@ -1,0 +1,157 @@
+# Feature: Equipment Management
+
+## Description
+This feature handles gym equipment procurement, order tracking, and payment management. It allows owners to place equipment orders and track their payment status.
+
+## Functionality
+
+### 1. Place Equipment Order
+- Order new gym equipment
+- Specify equipment name and quantity
+- Set total price
+- Create unpaid order record
+
+### 2. View Equipment Order History
+- Display all equipment orders
+- Show order details (name, quantity, price, date)
+- Visual payment status indicators
+- Track unpaid vs paid orders
+
+### 3. Mark Equipment Order as Paid
+- Update order payment status
+- Change order from unpaid to paid
+- Confirm payment completion
+
+## Code Locations
+
+### Presentation Layer (`Presentation.cs`)
+
+**Owner Dashboard - Equipment Menu**
+- Lines: **673-697**
+- Equipment management submenu
+- Options for ordering and viewing history
+
+**Place Equipment Order**
+- Lines: **1093-1118**
+- Collects equipment details
+- Validates quantity and price
+- Creates unpaid order
+
+**View Equipment Order History**
+- Lines: **1120-1145**
+- Displays all equipment orders
+- Shows formatted order table
+- Color-coded status:
+  - Green = PAID
+  - Yellow = UNPAID
+
+**Mark Order as Paid**
+- Method integrated in Owner Dashboard
+- Updates order payment status
+- Confirms payment update
+
+### Business Logic Layer (`Business_Logic.cs`)
+
+**Place Equipment Order**
+- Method: `PlaceEquipmentOrder()`
+- Validates equipment data
+- Creates new order record
+- Sets initial status as unpaid
+- Generates order ID
+
+**Get Equipment Order History**
+- Method: `GetEquipmentOrderHistory()`
+- Retrieves all equipment orders
+- Returns ordered list
+- Sorted by date (newest first)
+
+**Mark Order as Paid**
+- Method: `MarkEquipmentOrderAsPaid()`
+- Finds order by ID
+- Updates IsPaid status
+- Validates order exists
+
+### Data Access Layer (`Data_Access.cs`)
+
+**EquipmentOrder Model**
+- Class: `EquipmentOrder`
+- Properties:
+  - OrderID (int)
+  - EquipmentName (string)
+  - Quantity (int)
+  - TotalPrice (decimal)
+  - OrderDate (DateTime)
+  - IsPaid (bool)
+
+**Repository Methods**
+- `AddEquipmentOrder()` - Create new order
+- `GetAllEquipmentOrders()` - Retrieve all orders
+- `GetEquipmentOrderById()` - Find specific order
+- `UpdateEquipmentOrder()` - Modify order details
+- `MarkOrderAsPaid()` - Update payment status
+
+## User Flow
+
+```
+Owner Login
+    ↓
+Select "Equipment Management"
+    ↓
+Choose Operation:
+    ├─→ Place New Order
+    │   ├─ Enter Equipment Name
+    │   ├─ Enter Quantity
+    │   ├─ Enter Total Price
+    │   └─ Order Created (Unpaid)
+    │
+    ├─→ View Order History
+    │   └─ See All Orders with Status
+    │
+    └─→ Mark Order as Paid
+        ├─ View Unpaid Orders
+        ├─ Select Order ID
+        └─ Confirm Payment
+```
+
+## Key Features
+- ✅ Equipment procurement tracking
+- ✅ Order history maintenance
+- ✅ Payment status management
+- ✅ Visual status indicators
+- ✅ Quantity and price tracking
+- ✅ Chronological order listing
+
+## Display Format
+
+### Equipment Order History Table
+```
+Order ID | Equipment           | Quantity | Price      | Date         | Status
+---------|---------------------|----------|------------|--------------|--------
+1        | Treadmill Pro X500  | 2        | $5,000.00  | 15-Jan-2026  | PAID
+2        | Dumbbells Set       | 10       | $1,200.00  | 20-Jan-2026  | UNPAID
+3        | Bench Press Station | 3        | $2,400.00  | 25-Jan-2026  | PAID
+```
+
+## Dependencies
+- Standalone feature (no dependencies on other features)
+- Connected to: Owner Dashboard
+- Used for: Expense tracking and reporting
+
+## Access Control
+- **Owner**: Full access to equipment management
+- **Receptionist**: No access
+- **Trainer**: No access
+
+## Business Rules
+- All orders start as "Unpaid" by default
+- Orders cannot be deleted, only marked as paid
+- Total price must be positive value
+- Quantity must be greater than zero
+- Order date is automatically set to current date
+
+## Future Enhancements
+- Equipment inventory tracking
+- Maintenance scheduling
+- Equipment depreciation calculation
+- Vendor management
+- Purchase requisition approval workflow
