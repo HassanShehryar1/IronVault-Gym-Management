@@ -1,0 +1,268 @@
+# Feature: Payment Processing
+
+## Description
+This feature handles all payment-related operations including member membership payments, equipment order payments, and staff salary payments. It includes duplicate payment prevention and comprehensive payment history tracking.
+
+## Functionality
+
+### 1. Member Membership Payments
+- Process initial membership payments
+- Handle membership renewal payments
+- Track payment dates and amounts
+- Link payments to specific members
+
+### 2. Equipment Order Payments
+- Mark equipment orders as paid
+- Track equipment expense payments
+- Update order payment status
+
+### 3. Staff Salary Payments
+- Process monthly staff salaries
+- Prevent duplicate salary payments
+- Track payment history by month/year
+- Automated payment notifications
+
+### 4. Payment History & Reports
+- View all payment transactions
+- Filter by payment type
+- Track revenue and expenses
+- Detailed payment reports
+
+## Code Locations
+
+### Presentation Layer (`Presentation.cs`)
+
+**Payment History Display**
+- Lines: **76-101**
+- Shows recent payment history
+- Displays payment ID, member ID, amount, and date
+- Formatted table view
+
+**Process Member Payment (Registration)**
+- Lines: **211-265** (within RegisterNewMember)
+- Collects initial membership payment
+- Records payment transaction
+
+**Process Renewal Payment**
+- Lines: **294-340** (within RenewMembership)
+- Handles renewal payment processing
+- Updates payment records
+
+**Pay Staff Salary**
+- Lines: **840-900** (approximate, in Owner Dashboard)
+- Lists all active staff
+- Selects month/year for payment
+- Prevents duplicate payments
+- Triggers salary payment event
+
+**Salary Notification Handler**
+- Lines: **19-53**
+- Handles salary payment events
+- Shows payment confirmation
+- Displays duplicate payment warnings
+- Color-coded feedback:
+  - Green = Successful payment
+  - Yellow = Already paid warning
+
+### Business Logic Layer (`Business_Logic.cs`)
+
+**Record Member Payment**
+- Method: `RecordPayment()`
+- Creates payment record
+- Links to member ID
+- Stores amount and date
+
+**Get Payment History**
+- Method: `GetDetailedPaymentHistory()`
+- Retrieves all payment records
+- Returns sorted payment list
+
+**Pay Staff Salary**
+- Method: `PayStaffSalary()`
+- Validates staff exists and is active
+- Checks for duplicate payments (same month/year)
+- Records salary payment
+- Triggers SalaryPaid event
+- Returns payment status
+
+**Check Salary Paid**
+- Method: `IsSalaryAlreadyPaid()`
+- Validates if staff was paid for specific month/year
+- Prevents duplicate payments
+
+**Salary Payment Event**
+- Event: `OnSalaryPaid`
+- Custom EventArgs: `SalaryPaidEventArgs`
+- Properties:
+  - StaffID
+  - StaffName
+  - Amount
+  - Month
+  - Year
+  - AlreadyPaid (bool)
+
+### Data Access Layer (`Data_Access.cs`)
+
+**Payment Model**
+- Class: `Payment`
+- Properties:
+  - PaymentID (int)
+  - MemberID (int)
+  - Amount (decimal)
+  - PaymentDate (DateTime)
+
+**SalaryPayment Model**
+- Class: `SalaryPayment`
+- Properties:
+  - PaymentID (int)
+  - StaffID (int)
+  - Amount (decimal)
+  - Month (int)
+  - Year (int)
+  - PaymentDate (DateTime)
+
+**Repository Methods**
+- `AddPayment()` - Record new member payment
+- `GetAllPayments()` - Retrieve all payments
+- `GetPaymentsByMember()` - Get member-specific payments
+- `AddSalaryPayment()` - Record staff salary payment
+- `GetSalaryPaymentsByStaff()` - Get staff payment history
+- `CheckDuplicateSalary()` - Validate unique month/year payment
+
+## User Flow
+
+### Member Payment Flow
+```
+Receptionist Login
+    ↓
+Register New Member / Renew Membership
+    ↓
+Enter Payment Amount
+    ↓
+Process Payment
+    ↓
+Payment Recorded
+    ↓
+Receipt Generated
+```
+
+### Salary Payment Flow
+```
+Owner Login
+    ↓
+Select "Pay Staff Salary"
+    ↓
+View Active Staff List
+    ↓
+Select Staff Member
+    ↓
+Enter Month/Year
+    ↓
+System Checks for Duplicate
+    ↓
+├─→ Already Paid → Show Warning
+└─→ Not Paid → Process Payment
+    ↓
+Payment Successful
+    ↓
+Show Confirmation
+```
+
+## Key Features
+- ✅ Multiple payment types (membership, equipment, salary)
+- ✅ Duplicate payment prevention
+- ✅ Automated payment tracking
+- ✅ Event-driven notifications
+- ✅ Comprehensive payment history
+- ✅ Month/year-based salary tracking
+- ✅ Color-coded visual feedback
+- ✅ Real-time payment confirmations
+
+## Payment Types
+
+### 1. Membership Payments
+- Initial registration fees
+- Monthly/Annual renewal payments
+- Linked to membership plans
+
+### 2. Equipment Payments
+- One-time purchase payments
+- Bulk order payments
+- Inventory expense tracking
+
+### 3. Salary Payments
+- Monthly staff compensation
+- Role-based salary amounts
+- Historical payment records
+
+## Display Examples
+
+### Payment History Table
+```
+Pay ID | Member ID | Amount     | Date
+-------|-----------|------------|-------------
+1      | 101       | $50.00     | 15-Jan-2026
+2      | 102       | $75.00     | 16-Jan-2026
+3      | 101       | $50.00     | 15-Feb-2026
+```
+
+### Salary Payment Confirmation
+```
+========================================
+✅ SALARY PAYMENT SUCCESSFUL
+----------------------------------------
+Staff: John Doe (ID: 5)
+Amount: $3,000.00
+Period: January / 2026
+Payment Date: 30-Jan-2026 14:30
+
+💰 Payment recorded successfully!
+========================================
+```
+
+### Duplicate Payment Warning
+```
+========================================
+⚠️  ALREADY PAID NOTICE
+----------------------------------------
+Staff: John Doe (ID: 5)
+Amount: $3,000.00
+Period: January / 2026
+
+This staff member was already paid for this month.
+========================================
+```
+
+## Dependencies
+- Required by: Member Management (registration/renewal)
+- Required by: Equipment Management (order payments)
+- Required by: Staff Management (salary processing)
+- Triggers: Notification events
+
+## Access Control
+- **Owner**: Full access to all payment types
+- **Receptionist**: Member payments only
+- **Trainer**: No payment access
+
+## Business Rules
+- Payment amounts must be positive
+- Salary payments are unique per staff per month/year
+- All payments are recorded with timestamp
+- Payments cannot be deleted, only tracked
+- Payment IDs are auto-incremented
+- Duplicate salary payments are prevented
+
+## Security Features
+- Payment validation before processing
+- Duplicate payment detection
+- Transaction logging
+- Audit trail maintenance
+
+## Future Enhancements
+- Payment gateway integration
+- Receipt printing/emailing
+- Refund processing
+- Payment plan installments
+- Credit/debit card processing
+- Digital wallet integration
+- Payment analytics dashboard
