@@ -1,0 +1,357 @@
+# Feature: Reporting System
+
+## Description
+This feature provides comprehensive analytics, reports, and insights for gym operations. It allows owners to view financial reports, track revenue, monitor member statistics, and analyze business performance.
+
+## Functionality
+
+### 1. View Reports Menu
+- Centralized reporting dashboard
+- Multiple report types
+- Financial and operational analytics
+
+### 2. Revenue Reports
+- Total revenue tracking
+- Revenue by period
+- Income source breakdown
+- Payment analytics
+
+### 3. Payment History Reports
+- Detailed transaction logs
+- Member payment tracking
+- Equipment payment records
+- Salary payment history
+
+### 4. Member Statistics
+- Active member count
+- Membership plan distribution
+- New member trends
+- Renewal rates
+
+### 5. Staff Reports
+- Salary expense tracking
+- Staff headcount
+- Role distribution
+- Payroll analytics
+
+### 6. Equipment Reports
+- Equipment purchase history
+- Unpaid order tracking
+- Equipment expense analysis
+
+## Code Locations
+
+### Presentation Layer (`Presentation.cs`)
+
+**Owner Dashboard - Reports Menu**
+- Lines: **596-650** (approximate)
+- Main reporting interface
+- Report selection menu
+
+**View Reports Submenu**
+- Options:
+  1. Revenue Report
+  2. Payment History
+  3. Member Statistics
+  4. Staff Reports
+  5. Equipment Reports
+  6. Back to Dashboard
+
+**Show Payment History**
+- Lines: **76-101**
+- Displays recent payment transactions
+- Formatted table view with:
+  - Payment ID
+  - Member ID
+  - Amount
+  - Payment Date
+
+**Revenue Report Display**
+- Method: Shows total revenue from all sources
+- Calculates sum of all payments
+- Displays formatted currency
+
+**Member Statistics Display**
+- Shows active member count
+- Displays membership plan breakdown
+- Shows expiry statistics
+
+**Staff Report Display**
+- Lists all staff with salaries
+- Shows total payroll
+- Displays staff by role
+
+**Equipment Report Display**
+- Shows equipment order history
+- Highlights unpaid orders
+- Calculates total equipment expenses
+
+### Business Logic Layer (`Business_Logic.cs`)
+
+**Get Detailed Payment History**
+- Method: `GetDetailedPaymentHistory()`
+- Retrieves all payment records
+- Returns list of Payment objects
+- Sorted by date (newest first)
+
+**Calculate Total Revenue**
+- Method: `GetTotalRevenue()`
+- Sums all member payments
+- Returns total revenue amount
+
+**Get Member Statistics**
+- Method: `GetMemberStatistics()`
+- Counts active members
+- Groups by membership plan
+- Calculates percentages
+
+**Get Staff Report**
+- Method: `GetStaffReport()`
+- Lists all staff with salaries
+- Calculates total payroll
+- Groups by role
+
+**Get Equipment Report**
+- Method: `GetEquipmentReport()`
+- Retrieves equipment orders
+- Filters paid vs unpaid
+- Calculates total expenses
+
+**Get Revenue By Period**
+- Method: `GetRevenueByPeriod(startDate, endDate)`
+- Filters payments by date range
+- Returns revenue for period
+
+### Data Access Layer (`Data_Access.cs`)
+
+**Report Data Models**
+- Payment records
+- Member records
+- Staff records
+- Equipment order records
+- Salary payment records
+
+**Repository Methods**
+- `GetAllPayments()` - All payment transactions
+- `GetPaymentsByDateRange()` - Filter by date
+- `GetActiveMembers()` - Active member count
+- `GetMembersByPlan()` - Group by plan
+- `GetAllStaff()` - Staff list with salaries
+- `GetEquipmentOrders()` - Equipment purchases
+
+## User Flow
+
+```
+Owner Login
+    ↓
+Select "View Reports"
+    ↓
+Choose Report Type:
+    ├─→ Revenue Report
+    │   └─ View Total Revenue
+    │
+    ├─→ Payment History
+    │   └─ View All Transactions
+    │
+    ├─→ Member Statistics
+    │   ├─ Active Members Count
+    │   ├─ Plan Distribution
+    │   └─ Expiry Analysis
+    │
+    ├─→ Staff Reports
+    │   ├─ Staff List with Salaries
+    │   ├─ Total Payroll
+    │   └─ Role Distribution
+    │
+    └─→ Equipment Reports
+        ├─ Order History
+        ├─ Unpaid Orders
+        └─ Total Expenses
+```
+
+## Key Features
+- ✅ Comprehensive financial reporting
+- ✅ Real-time data analytics
+- ✅ Multiple report categories
+- ✅ Formatted data presentation
+- ✅ Date-based filtering
+- ✅ Summary and detail views
+- ✅ Export-ready formats
+
+## Report Types
+
+### 1. Revenue Report
+**Displays:**
+- Total revenue from memberships
+- Total revenue from all sources
+- Revenue trends
+- Income breakdown
+
+**Sample Output:**
+```
+=== REVENUE REPORT ===
+
+Total Membership Revenue: $45,750.00
+Total Equipment Expenses: $12,400.00
+Total Salary Payments:    $28,000.00
+
+Net Revenue: $17,350.00
+```
+
+### 2. Payment History Report
+**Displays:**
+- All payment transactions
+- Payment ID, Member ID, Amount, Date
+- Chronological listing
+
+**Sample Output:**
+```
+=== RECENT PAYMENT HISTORY ===
+
+Pay ID | Member ID | Amount     | Date
+-------|-----------|------------|-------------
+15     | 103       | $75.00     | 28-Jan-2026
+14     | 101       | $50.00     | 27-Jan-2026
+13     | 105       | $100.00    | 26-Jan-2026
+
+Total Transactions: 15
+Total Amount: $1,225.00
+```
+
+### 3. Member Statistics Report
+**Displays:**
+- Total active members
+- Members by plan
+- Expiring memberships
+- New member trends
+
+**Sample Output:**
+```
+=== MEMBER STATISTICS ===
+
+Total Active Members: 47
+
+By Plan:
+- Monthly:    23 members (48.9%)
+- Quarterly:  15 members (31.9%)
+- Annual:      9 members (19.1%)
+
+Expiring This Month: 8 members
+New This Month: 5 members
+```
+
+### 4. Staff Report
+**Displays:**
+- All staff members
+- Salaries by role
+- Total payroll
+- Active vs terminated
+
+**Sample Output:**
+```
+=== STAFF REPORT ===
+
+Active Staff: 8
+
+Receptionists: 3
+- Total Salary: $7,500.00
+
+Trainers: 5
+- Total Salary: $15,000.00
+
+Monthly Payroll: $22,500.00
+```
+
+### 5. Equipment Report
+**Displays:**
+- All equipment orders
+- Paid vs unpaid status
+- Total equipment investment
+
+**Sample Output:**
+```
+=== EQUIPMENT REPORT ===
+
+Total Orders: 12
+
+Paid Orders:     9  ($38,500.00)
+Unpaid Orders:   3  ($8,900.00)
+
+Total Equipment Investment: $47,400.00
+```
+
+## Dependencies
+- Requires: Payment Processing (transaction data)
+- Requires: Member Management (member data)
+- Requires: Staff Management (staff data)
+- Requires: Equipment Management (order data)
+
+## Access Control
+- **Owner**: Full access to all reports
+- **Receptionist**: Limited access (payment history only)
+- **Trainer**: No access to reports
+
+## Data Aggregation
+
+### Revenue Calculation
+```csharp
+Total Revenue = 
+    Sum(All Member Payments) 
+    - Sum(Equipment Expenses) 
+    - Sum(Salary Payments)
+```
+
+### Member Statistics
+```csharp
+Active Percentage = 
+    (Active Members / Total Members) * 100
+```
+
+### Payroll Calculation
+```csharp
+Total Payroll = 
+    Sum(All Staff Salaries where IsActive = true)
+```
+
+## Business Rules
+- Reports show real-time data
+- All amounts in USD currency
+- Dates in DD-MMM-YYYY format
+- Sorted by most recent first
+- Inactive records excluded from statistics
+- Percentage calculations rounded to 1 decimal
+
+## Performance Considerations
+- Reports cached for performance
+- Large datasets paginated
+- Query optimization for speed
+- Asynchronous data loading (if implemented)
+
+## Export Capabilities (Future)
+- Export to PDF
+- Export to Excel
+- Export to CSV
+- Email reports
+- Scheduled report generation
+
+## Visualization (Future Enhancement)
+- Bar charts for revenue trends
+- Pie charts for member distribution
+- Line graphs for growth trends
+- Heat maps for peak hours
+- Dashboard widgets
+
+## Future Enhancements
+- Custom date range selection
+- Comparative analysis (month-over-month)
+- Predictive analytics
+- Automated report scheduling
+- Email delivery of reports
+- Interactive dashboards
+- Data visualization charts
+- Export to multiple formats
+- Custom report builder
+- KPI tracking
+- Benchmark comparisons
+- Trend analysis
+- Forecasting tools
