@@ -1,0 +1,152 @@
+# Feature: Staff Management
+
+## Description
+This feature manages all staff-related operations including hiring new staff, viewing staff lists, and terminating employment. It handles both Receptionists and Trainers.
+
+## Functionality
+
+### 1. View All Staff
+- Display complete staff roster
+- Show active and terminated staff
+- Display staff roles and salaries
+- Color-coded status indicators
+
+### 2. View Active Staff Only
+- Filter to show only active employees
+- Quick overview of current workforce
+- Simplified staff listing
+
+### 3. Add New Staff
+- Hire new Receptionists or Trainers
+- Set salary amounts
+- Create login credentials
+- Assign staff roles
+
+### 4. Terminate Staff
+- End staff employment
+- Mark staff as inactive
+- Prevent future logins
+- Maintain employment history
+
+## Code Locations
+
+### Presentation Layer (`Presentation.cs`)
+
+**Staff Management Menu**
+- Lines: **1147-1174**
+- Shows all staff management options
+- Navigation between staff operations
+
+**View All Staff**
+- Lines: **1177-1200**
+- Displays all staff members
+- Shows active and terminated status
+- Color-coded status (Green = Active, Red = Terminated)
+
+**View Active Staff Only**
+- Lines: **1203-1221**
+- Filters and displays only active staff
+- Simplified view without status column
+
+**Add New Staff**
+- Lines: **1224-1246**
+- Collects staff information (name, role, salary)
+- Creates login credentials
+- Validates salary input
+
+**Terminate Staff**
+- Lines: **1249-1293**
+- Lists active staff
+- Confirms termination action
+- Deactivates staff account
+
+### Business Logic Layer (`Business_Logic.cs`)
+
+**Add Staff**
+- Method: `AddStaff()`
+- Validates staff data
+- Creates staff record
+- Assigns role (Receptionist/Trainer)
+- Sets salary and credentials
+
+**Get All Staff**
+- Method: `GetAllStaff()`
+- Retrieves complete staff list
+- Returns all staff regardless of status
+
+**Get Active Staff**
+- Method: `GetActiveStaff()`
+- Filters staff by active status
+- Returns only currently employed staff
+
+**Get Staff By ID**
+- Method: `GetStaffById()`
+- Retrieves specific staff member
+- Returns staff object or null
+
+**Terminate Staff**
+- Method: `TerminateStaff()`
+- Sets IsActive to false
+- Maintains staff record
+- Prevents future operations
+
+### Data Access Layer (`Data_Access.cs`)
+
+**Staff Model**
+- Class: `Staff`
+- Properties:
+  - StaffID (int)
+  - Name (string)
+  - Role (string) - "Receptionist" or "Trainer"
+  - Salary (decimal)
+  - Username (string)
+  - Password (string)
+  - IsActive (bool)
+
+**Repository Methods**
+- `AddStaff()` - Add new staff to system
+- `GetAllStaff()` - Retrieve all staff records
+- `GetActiveStaff()` - Get only active staff
+- `GetStaffById()` - Find staff by ID
+- `UpdateStaff()` - Modify staff information
+- `TerminateStaff()` - Set staff as inactive
+
+## User Flow
+
+```
+Owner Login
+    ↓
+Select "Staff Management"
+    ↓
+Choose Operation:
+    ├─→ View All Staff (see everyone)
+    ├─→ View Active Staff (current employees)
+    ├─→ Add New Staff (hire)
+    └─→ Terminate Staff (end employment)
+```
+
+## Key Features
+- ✅ Complete staff lifecycle management
+- ✅ Role-based staff categorization
+- ✅ Active/Inactive status tracking
+- ✅ Salary information management
+- ✅ Login credential creation
+- ✅ Employment history preservation
+- ✅ Color-coded visual feedback
+
+## Dependencies
+- Requires: Authentication System (for login credentials)
+- Requires: Salary Payment System (for payroll)
+- Connected to: Receptionist and Trainer Dashboards
+
+## Access Control
+- **Owner**: Full access to all staff operations
+- **Receptionist**: No access to staff management
+- **Trainer**: No access to staff management
+
+## Business Rules
+- Staff cannot be deleted, only terminated (soft delete)
+- Terminated staff maintain their records for history
+- Each staff member must have unique username
+- Role must be either "Receptionist" or "Trainer"
+- Salary must be a positive decimal value
