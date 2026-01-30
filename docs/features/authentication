@@ -1,0 +1,321 @@
+# Feature: Authentication System
+
+## Description
+This feature provides secure role-based authentication for three user types: Owner, Receptionist, and Trainer. It handles login validation, session management, and access control throughout the application.
+
+## Functionality
+
+### 1. Role-Based Login
+- Three distinct login flows
+- Username and password validation
+- Role-specific dashboard redirection
+
+### 2. Credential Management
+- Store user credentials securely
+- Validate login attempts
+- Track active sessions
+
+### 3. Access Control
+- Role-based permissions
+- Dashboard access restrictions
+- Feature-level authorization
+
+## Code Locations
+
+### Presentation Layer (`Presentation.cs`)
+
+**Main Menu**
+- Lines: **104-129**
+- Role selection interface
+- Three login options:
+  1. Receptionist Login
+  2. Owner Login
+  3. Trainer Login
+  4. Exit
+
+**Receptionist Login Flow**
+- Lines: **132-149**
+- Prompts for username and password
+- Validates receptionist credentials
+- Redirects to Receptionist Dashboard on success
+- Shows error on invalid credentials
+
+**Owner Login Flow**
+- Lines: **151-168**
+- Prompts for username and password
+- Validates owner credentials
+- Redirects to Owner Dashboard on success
+- Shows error on invalid credentials
+
+**Trainer Login Flow**
+- Lines: **170-187**
+- Prompts for username and password
+- Validates trainer credentials
+- Redirects to Trainer Dashboard on success
+- Shows error on invalid credentials
+
+**Dashboard Controllers**
+- Lines: **190-209** - Receptionist Dashboard
+- Lines: **596-738** - Owner Dashboard (approximate)
+- Lines: **740-780** - Trainer Dashboard (approximate)
+
+### Business Logic Layer (`Business_Logic.cs`)
+
+**Login Receptionist**
+- Method: `LoginReceptionist(username, password)`
+- Searches staff with role "Receptionist"
+- Validates username and password match
+- Checks if staff is active
+- Returns: `true` if valid, `false` otherwise
+
+**Login Owner**
+- Method: `LoginOwner(username, password)`
+- Hardcoded owner credentials (or database lookup)
+- Validates username and password
+- Returns: `true` if valid, `false` otherwise
+
+**Login Trainer**
+- Method: `LoginTrainer(username, password)`
+- Searches staff with role "Trainer"
+- Validates username and password match
+- Checks if staff is active
+- Returns: `true` if valid, `false` otherwise
+
+**Session Management** (Conceptual)
+- Tracks currently logged-in user
+- Stores user role and ID
+- Maintains session state
+
+### Data Access Layer (`Data_Access.cs`)
+
+**Staff Model** (Used for authentication)
+- Class: `Staff`
+- Authentication Properties:
+  - Username (string)
+  - Password (string)
+  - Role (string) - "Owner", "Receptionist", or "Trainer"
+  - IsActive (bool)
+
+**Owner Credentials** (Hardcoded or Database)
+- Default Owner Username: "owner"
+- Default Owner Password: "owner123"
+
+**Repository Methods**
+- `ValidateStaffCredentials()` - Check username/password
+- `GetStaffByUsername()` - Find staff by username
+- `GetStaffByRole()` - Filter staff by role
+- `CheckStaffActive()` - Verify staff is active
+
+## User Flow
+
+### Login Process
+```
+Application Start
+    ↓
+Display Main Menu
+    ↓
+Select Role (Owner/Receptionist/Trainer)
+    ↓
+Enter Username
+    ↓
+Enter Password
+    ↓
+Validate Credentials
+    ↓
+├─→ Valid → Redirect to Role Dashboard
+└─→ Invalid → Show Error → Return to Main Menu
+```
+
+## Key Features
+- ✅ Three-tier role hierarchy
+- ✅ Secure credential validation
+- ✅ Role-based dashboard routing
+- ✅ Active status verification
+- ✅ Error handling for invalid logins
+- ✅ Session-based access control
+- ✅ Clear user feedback
+
+## Access Levels
+
+### Owner (Highest Privilege)
+**Can Access:**
+- All reports and analytics
+- Staff management (add/terminate)
+- Equipment management
+- Salary payment processing
+- View all members
+- System-wide operations
+
+**Cannot Access:**
+- Member registration (Receptionist function)
+- Member check-in (Receptionist function)
+
+### Receptionist (Medium Privilege)
+**Can Access:**
+- Member registration
+- Member check-in
+- Membership renewal
+- View membership plans
+- View payment history
+- View member details
+- Terminate memberships
+
+**Cannot Access:**
+- Staff management
+- Equipment management
+- Salary payments
+- Revenue reports
+
+### Trainer (Lowest Privilege)
+**Can Access:**
+- View assigned members only
+- View member details (limited)
+- Personal dashboard
+
+**Cannot Access:**
+- Member registration
+- Staff management
+- Equipment management
+- Payment processing
+- Other trainers' members
+
+## Default Credentials
+
+### Owner
+```
+Username: owner
+Password: owner123
+```
+
+### Sample Receptionist
+```
+Username: receptionist
+Password: receptionist123
+```
+
+### Sample Trainer
+```
+Username: trainer
+Password: trainer123
+```
+
+## Security Features
+
+### Password Validation
+- Username-password matching
+- Case-sensitive credentials
+- Active status verification
+
+### Session Management
+- Single active session per user
+- Automatic logout on exit
+- Session timeout (if implemented)
+
+### Access Control
+- Dashboard-level restrictions
+- Feature-level authorization
+- Role-based menu visibility
+
+## Display Examples
+
+### Main Menu
+```
+       IRONVAULT GYM MANAGEMENT         
+
+1. Receptionist Login
+2. Owner Login
+3. Trainer Login
+4. Exit
+
+Select Role: _
+```
+
+### Login Screen (Receptionist)
+```
+=== RECEPTIONIST LOGIN ===
+
+Username: john_smith
+Password: ********
+
+[Validating...]
+```
+
+### Successful Login
+```
+✓ Login Successful!
+Welcome, John Smith (Receptionist)
+
+Redirecting to dashboard...
+```
+
+### Failed Login
+```
+❌ Invalid credentials!
+
+[Press any key to continue...]
+```
+
+## Code Structure
+
+### Authentication Flow
+```
+MainController
+    ↓
+ShowMainMenu()
+    ↓
+ReceptionistLoginFlow() / OwnerLoginFlow() / TrainerLoginFlow()
+    ↓
+GymService.LoginReceptionist() / LoginOwner() / LoginTrainer()
+    ↓
+GymRepository.ValidateCredentials()
+    ↓
+Return true/false
+    ↓
+If true → Show Dashboard
+If false → Show Error
+```
+
+## Dependencies
+- Required by: All features (authentication gate)
+- Requires: Staff Management (for staff credentials)
+- Connected to: All dashboards
+
+## Business Rules
+- Only active staff can log in
+- Terminated staff cannot access system
+- Owner credentials are system-level
+- One role per user
+- Credentials are case-sensitive
+- No password recovery (manual reset)
+
+## Error Handling
+- Invalid username → "Invalid credentials"
+- Invalid password → "Invalid credentials"
+- Inactive account → "Invalid credentials" (security best practice)
+- Empty fields → Validation error
+
+## Integration Points
+
+### With Staff Management
+- Staff credentials stored in Staff table
+- Active status affects login ability
+- Role determines dashboard access
+
+### With All Features
+- Authentication required before any operation
+- Role determines feature availability
+- Session maintains user context
+
+## Future Enhancements
+- Password encryption (hashing)
+- Password strength requirements
+- Multi-factor authentication (MFA)
+- Password reset functionality
+- Account lockout after failed attempts
+- Session timeout
+- Login history/audit trail
+- Remember me functionality
+- Single sign-on (SSO)
+- Biometric authentication
+- JWT token implementation
+- Role permission customization
